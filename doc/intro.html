@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Dinh Dong" />
+
+<meta name="date" content="2020-05-17" />
+
+<title>Introduction to the FRAS package</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to the FRAS package</h1>
+<h4 class="author">Dinh Dong</h4>
+<h4 class="date">2020-05-17</h4>
+
+
+
+<p>This vignette gives an introduction to the FRAS package. The package contains a set of functions used for analysis of data from FARS - Fatality Analysis Reporting System. FARS is a nationwide census providing NHTSA, Congress and the American public yearly data regarding fatal injuries suffered in motor vehicle traffic crashes. We can get from: [<a href="http://www.nhtsa.gov/Data/Fatality-Analysis-Reporting-System-(FARS)">1</a>]</p>
+<div id="package-functions" class="section level2">
+<h2>Package functions</h2>
+<p>There are three exported functions available to users:</p>
+<ul>
+<li><code>fars_read()</code></li>
+<li><code>fars_summarize_years()</code></li>
+<li><code>fars_map_state()</code></li>
+</ul>
+<p>We will use data from FARS, years 2013-2015, that can be found in the package directory under <code>\dataset</code> folder for create the examples.</p>
+</div>
+<div id="read-fars-data-files" class="section level2">
+<h2>Read FARS data files</h2>
+<p>The function <code>fars_read()</code> provides a way how to read data from a file path provided as an argument. It returns a <code>tibble</code> with loaded data:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">filename &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata/accident_2014.csv.bz2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FRAS&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">fars_read</span>(filename)</a></code></pre></div>
+<pre><code>## # A tibble: 30,056 x 50
+##    STATE ST_CASE VE_TOTAL VE_FORMS PVH_INVL  PEDS PERNOTMVIT PERMVIT PERSONS
+##    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1     1   10001        1        1        0     0          0       2       2
+##  2     1   10002        1        1        0     0          0       1       1
+##  3     1   10003        2        2        0     0          0       7       7
+##  4     1   10004        3        3        0     0          0       5       5
+##  5     1   10005        1        1        0     0          0       1       1
+##  6     1   10006        1        1        0     0          0       1       1
+##  7     1   10007        3        2        1     0          0       2       2
+##  8     1   10008        2        2        0     0          0       4       4
+##  9     1   10009        3        3        0     0          0       5       5
+## 10     1   10010        2        2        0     0          0       6       6
+## # ... with 30,046 more rows, and 41 more variables: COUNTY &lt;dbl&gt;, CITY &lt;dbl&gt;,
+## #   DAY &lt;dbl&gt;, MONTH &lt;dbl&gt;, YEAR &lt;dbl&gt;, DAY_WEEK &lt;dbl&gt;, HOUR &lt;dbl&gt;,
+## #   MINUTE &lt;dbl&gt;, NHS &lt;dbl&gt;, ROAD_FNC &lt;dbl&gt;, ROUTE &lt;dbl&gt;, TWAY_ID &lt;chr&gt;,
+## #   TWAY_ID2 &lt;chr&gt;, MILEPT &lt;dbl&gt;, LATITUDE &lt;dbl&gt;, LONGITUD &lt;dbl&gt;, SP_JUR &lt;dbl&gt;,
+## #   HARM_EV &lt;dbl&gt;, MAN_COLL &lt;dbl&gt;, RELJCT1 &lt;dbl&gt;, RELJCT2 &lt;dbl&gt;, TYP_INT &lt;dbl&gt;,
+## #   WRK_ZONE &lt;dbl&gt;, REL_ROAD &lt;dbl&gt;, LGT_COND &lt;dbl&gt;, WEATHER1 &lt;dbl&gt;,
+## #   WEATHER2 &lt;dbl&gt;, WEATHER &lt;dbl&gt;, SCH_BUS &lt;dbl&gt;, RAIL &lt;chr&gt;, NOT_HOUR &lt;dbl&gt;,
+## #   NOT_MIN &lt;dbl&gt;, ARR_HOUR &lt;dbl&gt;, ARR_MIN &lt;dbl&gt;, HOSP_HR &lt;dbl&gt;, HOSP_MN &lt;dbl&gt;,
+## #   CF1 &lt;dbl&gt;, CF2 &lt;dbl&gt;, CF3 &lt;dbl&gt;, FATALS &lt;dbl&gt;, DRUNK_DR &lt;dbl&gt;</code></pre>
+</div>
+<div id="summarize-the-number-of-accidents" class="section level2">
+<h2>Summarize the number of accidents</h2>
+<p>The 2nd function <code>fars_summarize_years()</code> input a list of years with integer values as an argument. If the input files with data are available, it returns a data frame with number of accidents per year and month. The data files need to be located in the working directory.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">setwd</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FRAS&quot;</span>))</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">fars_summarize_years</span>(<span class="dv">2013</span><span class="op">:</span><span class="dv">2015</span>)</a></code></pre></div>
+<pre><code>## # A tibble: 12 x 4
+##    MONTH `2013` `2014` `2015`
+##    &lt;dbl&gt;  &lt;int&gt;  &lt;int&gt;  &lt;int&gt;
+##  1     1   2230   2168   2368
+##  2     2   1952   1893   1968
+##  3     3   2356   2245   2385
+##  4     4   2300   2308   2430
+##  5     5   2532   2596   2847
+##  6     6   2692   2583   2765
+##  7     7   2660   2696   2998
+##  8     8   2899   2800   3016
+##  9     9   2741   2618   2865
+## 10    10   2768   2831   3019
+## 11    11   2615   2714   2724
+## 12    12   2457   2604   2781</code></pre>
+</div>
+<div id="plot-accident-locations" class="section level2">
+<h2>Plot accident locations</h2>
+<p>The last function is <code>fars_map_state()</code> needs a state number and year as arguments. It returns a plot of the state with accident locations associated with years. This is an example showing how to use this function.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">setwd</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;FRAS&quot;</span>))</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">fars_map_state</span>(<span class="dv">10</span>, <span class="dv">2013</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAABlBMVEUAAAD///+l2Z/dAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAFHElEQVR4nO3d0XabSBAA0eH/fzqxY8swDBTIUXcjqh52bUSWPncRILBP2mS7tewBqicQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQVA2oPZotSR0oc+N9C4v2tShpluUYJeot/n6fzlMIaGBRgKcM0Miixmg1p2gfS2qOltNoihqT1Rijdf+e6uxANcaYD/F9qi8x2FRjjtkO1FYLswubo+00mKWKT/4gq32mLZdmlz5JG36XPtaj9El+Dsmt3gFoKjDKfJ9p/cICpY8yeIuV+Az2Xfosq3N7a/lDzUqf5efc1b7fZukzzUsfpr9KFAgmEGgwwfwMVusIVARodt6qtgMVmGZ9ns+faVb+MKMLoZRBxqXM0ja/mX3yKFLCKN2TwOGn1TpCoZN8yLT+MCzQfFttfRAWaLWpPaByB6EsoLbBVe40FjdK/0ynjd9NtwVq8y+Xny3W690RaL7JBcJsR3q43RxoeRx2D+o31B17uoui257Flg4bjwunFV96GWexI1eKZYSSTvPbI9wWaNNna38qIhQPtNri1g5VQyh+CgIqJhQ+xHqD22IVhOKBcA/aOVwllH9HcXDeqrQLRd7ueFwd7t4QWizKF4q+Dlr8nko3wuhSMl0o56PG+JVGCzOqBDRemvzTQnFAm1sCoOSdKHsP/hlh+xOIQLQ8c8g6QHuX2INzX1R1gOiF+wIdeI/trvbaKgOV2IUuBJRzRXQloBSiawFVuL+X0IlPIQLRK9/3BF42DI8Q31mg1Q+pvbJ6QG22ZAgUO3I9oPmS0c3G4IkLAlW50VFmhNrPfQqMIBDV3/j5ORAXmK7ACOcO0tEVuCd9+n5+aCUuSU/ezw9NIKjEJbtAkEDQaIi2+Ups+RNMtU9j+RNMzx2/o0of4KOnDuBBZW//M4Gg3SGSJ6wPlDxi7QvFA6++ugvsQbf/+SCBMIEgOIsJ5B5Etcc/+oWjF0IrBPTkqy/uCkCpQ14CKHPKawAljlkYqOEaERUGOr3KS7oMUNak1wFKGvVCQDmzlgXafhQUW1mgX633H7sW0BT/a1EXA/pcOdSoBtDJI85tgZY/eCfQrHNjvCXQ/oHj5BiBQiV+wkwg3FDb+a5/pQlEfyLyPF/xIN36Bf2qdweCVWP/8p/LAf37bboi55a41mNsDPb1BE2gzRc+D1Dv+DurRx99HXkC9JZX0scupQ84vfHtjr1tbT6YP/VfeUGhm9vZ2PHb9u8KBMcOfnQ4dX+vb1Cxp4Mzb5zWf7laEFLkpvb+9x98dPjOe9B+h4D+4cQiXQno2bV/lUB1NrXbSaA3/KhBHfmIcXzt/9dlgH6z9m8SqMyWIIGgc8eYOwKN61ZaffH6ucK29FwbbgJBAkEClUkgSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCDoD1PFQZcdaqMYAAAAAElFTkSuQmCC" /><!-- --></p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
