@@ -3,6 +3,7 @@ library(testthat)
 library(dplyr)
 library(maps)
 
+setwd(system.file("extdata", package = "FRAS"))
 # test make_filename
 expect_identical(make_filename(2013),
                  'accident_2013.csv.bz2')
