@@ -1,0 +1,55 @@
+---
+title: "Introduction to the FRAS package"
+author: "Dinh Dong"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to the FRAS package}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, include = FALSE}
+library(FRAS)
+library(dplyr)
+library(maps)
+```
+
+This vignette gives an introduction to the FRAS package. The package contains a set of functions used for analysis of data from FARS - Fatality Analysis Reporting System. FARS is a nationwide census providing NHTSA, Congress and the American public yearly data regarding fatal injuries suffered in motor vehicle traffic crashes. We can get from:  [[1](http://www.nhtsa.gov/Data/Fatality-Analysis-Reporting-System-(FARS))]
+
+## Package functions
+
+There are three exported functions available to users:
+
+- `fars_read()`
+- `fars_summarize_years()`
+- `fars_map_state()`
+
+We will use data from FARS, years 2013-2015, that can be found in the package directory under `\dataset` folder for create the examples.
+
+## Read FARS data files
+
+The function `fars_read()` provides a way how to read data from a file path provided as an argument. It returns a `tibble` with loaded data:
+
+```{r fars_read_example}
+filename <- system.file("extdata/accident_2014.csv.bz2", package = "FRAS")
+fars_read(filename)
+```
+
+## Summarize the number of accidents
+
+The 2nd function `fars_summarize_years()` input a list of years with integer values as an argument. If the input files with data are available, it returns a data frame with number of accidents per year and month. The data files need to be located in the working directory.
+
+```{r fars_summarize_years_example}
+setwd(system.file("extdata", package = "FRAS"))
+fars_summarize_years(2013:2015)
+```
+
+## Plot accident locations
+
+The last function is `fars_map_state()` needs a state number and year as arguments. It returns a plot of the state with accident locations associated with years. This is an example showing how to use this function.
+
+```{r fars_map_state_example}
+setwd(system.file("extdata", package = "FRAS"))
+fars_map_state(10, 2013)
+```
